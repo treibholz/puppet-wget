@@ -1,6 +1,6 @@
 name    'maestrodev-wget'
 version '0.0.1'
-source 'http://github.com/maestrodev/puppet-wget'
+source 'http://github.com/maestrodev/puppet-wget.git'
 author 'maestrodev'
 license 'Apache License, Version 2.0'
 summary 'wget module for Puppet'
