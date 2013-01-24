@@ -18,7 +18,7 @@ class wget($version='installed') {
 # using $http_proxy if necessary.
 #
 ################################################################################
-define wget::fetch($source,$destination,$timeout="0") {
+define wget::fetch($source,$destination,$timeout="0",$verbose=false) {
   include wget
   # using "unless" with test instead of "creates" to re-attempt download
   # on empty files.
@@ -30,8 +30,14 @@ define wget::fetch($source,$destination,$timeout="0") {
   else {
     $environment = []
   }
+
+  $verbose_option = $verbose ? {
+    true  => "--verbose",
+    false => "--no-verbose"
+  }
+
   exec { "wget-$name":
-    command => "wget --output-document=$destination $source",
+    command => "wget $verbose_option --output-document=$destination $source",
     timeout => $timeout,
     unless => "test -s $destination",
     environment => $environment,
@@ -48,13 +54,18 @@ define wget::fetch($source,$destination,$timeout="0") {
 # password must be stored in the password variable within the .wgetrc file.
 #
 ################################################################################
-define wget::authfetch($source,$destination,$user,$password="",$timeout="0") {
+define wget::authfetch($source,$destination,$user,$password="",$timeout="0",$verbose=false) {
   include wget
   if $http_proxy {
     $environment = [ "HTTP_PROXY=$http_proxy", "http_proxy=$http_proxy", "WGETRC=/tmp/wgetrc-$name" ]
   }
   else {
     $environment = [ "WGETRC=/tmp/wgetrc-$name" ]
+  }
+
+  $verbose_option = $verbose ? {
+    true  => "--verbose",
+    false => "--no-verbose"
   }
   
   case $::operatingsystem {
@@ -76,7 +87,7 @@ define wget::authfetch($source,$destination,$user,$password="",$timeout="0") {
     content => $wgetrc_content,
   } ->
   exec { "wget-$name":
-    command => "wget --user=$user --output-document=$destination $source",
+    command => "wget $verbose_option --user=$user --output-document=$destination $source",
     timeout => $timeout,
     unless => "test -s $destination",
     environment => $environment,
