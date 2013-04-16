@@ -47,7 +47,7 @@ define wget::fetch($source,$destination,$timeout="0",$verbose=false,$redownload=
   }
   
   exec { "wget-$name":
-    command => "wget $verbose_option$nocheckcertificate --output-document=$destination $source",
+    command => "wget $verbose_option$nocheckcert_option --output-document=$destination $source",
     timeout => $timeout,
     unless => $unless_test,
     environment => $environment,
@@ -107,7 +107,7 @@ define wget::authfetch($source,$destination,$user,$password="",$timeout="0",$ver
     content => $wgetrc_content,
   } ->
   exec { "wget-$name":
-    command => "wget $verbose_option$nocheckcertificate --user=$user --output-document=$destination $source",
+    command => "wget $verbose_option$nocheckcert_option --user=$user --output-document=$destination $source",
     timeout => $timeout,
     unless => $unless_test,
     environment => $environment,
