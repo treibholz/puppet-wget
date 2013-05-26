@@ -2,10 +2,26 @@ require 'spec_helper'
 
 describe 'wget::fetch' do
   let(:title) { 'test' }
-  let(:params) { {
+
+  default_params = {
     :source      => 'http://localhost/source',
     :destination => '/tmp/dest',
-  } }
+  }
 
-  it { should contain_exec('wget-test').with_command('wget --no-verbose --output-document=/tmp/dest http://localhost/source') }
+  context "with default params" do
+    let(:params) { default_params }
+
+    it { should contain_exec('wget-test').with_command('wget --no-verbose --output-document=/tmp/dest http://localhost/source') }
+  end
+
+  context "with user" do
+    let(:params) { default_params.merge({
+      :user => 'testuser',
+    })}
+
+    it { should contain_exec('wget-test').with({
+      'command' => 'wget --no-verbose --output-document=/tmp/dest http://localhost/source',
+      'user'    => 'testuser'
+    }) }
+  end
 end
