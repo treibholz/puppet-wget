@@ -12,7 +12,7 @@ define wget::fetch (
   $verbose            = false,
   $redownload         = false,
   $nocheckcertificate = false,
-  $user               = 'root',
+  $execuser           = 'root',
 ) {
 
   include wget
@@ -47,7 +47,7 @@ define wget::fetch (
     timeout     => $timeout,
     unless      => $unless_test,
     environment => $environment,
-    user        => $user,
+    user        => $execuser,
     path        => '/usr/bin:/usr/sbin:/bin:/usr/local/bin:/opt/local/bin',
     require     => Class['wget'],
   }

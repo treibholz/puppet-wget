@@ -15,6 +15,7 @@ define wget::authfetch (
   $verbose            = false,
   $redownload         = false,
   $nocheckcertificate = false,
+  $execuser           = 'root',
 ) {
 
   include wget
@@ -64,6 +65,7 @@ define wget::authfetch (
     timeout     => $timeout,
     unless      => $unless_test,
     environment => $environment,
+    user        => $execuser,
     path        => '/usr/bin:/usr/sbin:/bin:/usr/local/bin:/opt/local/bin',
     require     => Class['wget'],
   }

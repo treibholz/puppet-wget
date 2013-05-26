@@ -16,7 +16,7 @@ describe 'wget::fetch' do
 
   context "with user" do
     let(:params) { default_params.merge({
-      :user => 'testuser',
+      :execuser => 'testuser',
     })}
 
     it { should contain_exec('wget-test').with({
