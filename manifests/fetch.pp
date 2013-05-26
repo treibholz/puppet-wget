@@ -32,15 +32,15 @@ define wget::fetch (
   }
 
   $unless_test = $redownload ? {
-    true => "test",
+    true  => 'test',
     false => "test -s ${destination}"
   }
-  
+
   $nocheckcert_option = $nocheckcertificate ? {
-    true => ' --no-check-certificate',
+    true  => ' --no-check-certificate',
     false => ''
   }
-  
+
   exec { "wget-${name}":
     command     => "wget ${verbose_option}${nocheckcert_option} --output-document=${destination} ${source}",
     timeout     => $timeout,

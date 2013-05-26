@@ -32,15 +32,15 @@ define wget::authfetch (
   }
 
   $unless_test = $redownload ? {
-    true => "test",
+    true  => 'test',
     false => "test -s ${destination}"
   }
-  
+
   $nocheckcert_option = $nocheckcertificate ? {
-    true => ' --no-check-certificate',
+    true  => ' --no-check-certificate',
     false => ''
   }
-  
+
   case $::operatingsystem {
     'Darwin': {
       # This is to work around an issue with macports wget and out of date CA cert bundle.  This requires
