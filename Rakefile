@@ -10,4 +10,4 @@ require 'puppet_blacksmith/rake_tasks'
 
 PuppetLint.configuration.send("disable_80chars")
 
-task :default => [:clean, :lint, :spec]
+task :default => [:clean, :spec]
