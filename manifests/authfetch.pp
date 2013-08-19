@@ -61,7 +61,7 @@ define wget::authfetch (
     content => $wgetrc_content,
   } ->
   exec { "wget-${name}":
-    command     => "wget ${verbose_option}${nocheckcert_option} --user=${user} --output-document=${destination} ${source}",
+    command     => "wget ${verbose_option}${nocheckcert_option} --user=${user} --output-document='${destination}' '${source}'",
     timeout     => $timeout,
     unless      => $unless_test,
     environment => $environment,
