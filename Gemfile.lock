@@ -17,7 +17,7 @@ GEM
       facter (~> 1.6)
       hiera (~> 1.0)
       rgen (~> 0.6.5)
-    puppet-blacksmith (2.0.0)
+    puppet-blacksmith (1.0.5)
       nokogiri
       puppet (>= 2.7.16)
       puppetlabs_spec_helper (>= 0.3.0)
