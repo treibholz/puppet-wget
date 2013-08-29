@@ -15,7 +15,7 @@ describe 'wget' do
   end
 
   context 'no version specified' do
-    it { should contain_package('wget').with_ensure('installed') }
+    it { should contain_package('wget').with_ensure('present') }
   end
 
   context 'version is 1.2.3' do
