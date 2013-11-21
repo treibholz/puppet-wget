@@ -37,6 +37,13 @@ This fetches a document which requires authentication:
         verbose     => false,
      }
 ```
+# Testing
+
+`rake` will run the rspec-puppet specs
+
+`rake spec:system` will run the rspec-system specs with vagrant
+
+`RS_DESTROY=no rake spec:system` to avoid destroying the vm after running the tests
 
 # License
 
