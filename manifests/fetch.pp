@@ -13,19 +13,23 @@ define wget::fetch (
   $redownload         = false,
   $nocheckcertificate = false,
   $execuser           = undef,
+  $user               = undef,
+  $password           = undef,
 ) {
 
   include wget
 
-  # using "unless" with test instead of "creates" to re-attempt download
-  # on empty files.
-  # wget creates an empty file when a download fails, and then it wouldn't try
-  # again to download the file
-  if $::http_proxy {
-    $environment = [ "HTTP_PROXY=${::http_proxy}", "http_proxy=${::http_proxy}" ]
-  } else {
-    $environment = []
+  $http_proxy_env = $::http_proxy ? {
+    undef   => [],
+    default => [ "HTTP_PROXY=${::http_proxy}", "http_proxy=${::http_proxy}" ],
   }
+  $password_env = $user ? {
+    undef   => [],
+    default => [ "WGETRC=/tmp/wgetrc-${name}" ],
+  }
+
+  # not using stdlib.concat to avoid extra dependency
+  $environment = split(inline_template("<%= (@http_proxy_env+@password_env).join(',') %>"),',')
 
   $verbose_option = $verbose ? {
     true  => '--verbose',
@@ -42,8 +46,31 @@ define wget::fetch (
     false => ''
   }
 
+  $user_option = $user ? {
+    undef   => '',
+    default => " --user=${user}",
+  }
+
+  if $user != undef {
+    $wgetrc_content = $::operatingsystem ? {
+      # This is to work around an issue with macports wget and out of date CA cert bundle.  This requires
+      # installing the curl-ca-bundle package like so:
+      #
+      # sudo port install curl-ca-bundle
+      'Darwin' => "password=${password}\nCA_CERTIFICATE=/opt/local/share/curl/curl-ca-bundle.crt\n",
+      default  => "password=${password}",
+    }
+
+    file { "/tmp/wgetrc-${name}":
+      owner   => 'root',
+      mode    => '0600',
+      content => $wgetrc_content,
+      before  => Exec["wget-${name}"],
+    }
+  }
+
   exec { "wget-${name}":
-    command     => "wget ${verbose_option}${nocheckcert_option} --output-document='${destination}' '${source}'",
+    command     => "wget ${verbose_option}${nocheckcert_option}${user_option} --output-document='${destination}' '${source}'",
     timeout     => $timeout,
     unless      => $unless_test,
     environment => $environment,
