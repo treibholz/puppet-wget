@@ -23,13 +23,17 @@ define wget::fetch (
     undef   => [],
     default => [ "HTTP_PROXY=${::http_proxy}", "http_proxy=${::http_proxy}" ],
   }
+  $https_proxy_env = $::http_proxy ? {
+    undef   => [],
+    default => [ "HTTPS_PROXY=${::https_proxy}", "https_proxy=${::https_proxy}" ],
+  }
   $password_env = $user ? {
     undef   => [],
     default => [ "WGETRC=/tmp/wgetrc-${name}" ],
   }
 
   # not using stdlib.concat to avoid extra dependency
-  $environment = split(inline_template("<%= (@http_proxy_env+@password_env).join(',') %>"),',')
+  $environment = split(inline_template("<%= (@http_proxy_env+@https_proxy_env+@password_env).join(',') %>"),',')
 
   $verbose_option = $verbose ? {
     true  => '--verbose',
