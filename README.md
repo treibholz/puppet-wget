@@ -28,7 +28,7 @@ or alternatively:
 This fetches a document which requires authentication:
 
 ```puppet
-     wget::authfetch { 'Fetch secret PDF':
+     wget::fetch { 'Fetch secret PDF':
         source      => 'https://confidential.example.com/secret.pdf',
         destination => '/tmp/secret.pdf',
         user        => 'user',
