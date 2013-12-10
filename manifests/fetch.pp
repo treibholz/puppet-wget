@@ -29,7 +29,7 @@ define wget::fetch (
   }
   $password_env = $user ? {
     undef   => [],
-    default => [ "WGETRC=/tmp/wgetrc-${name}" ],
+    default => [ "WGETRC=${destination}.wgetrc" ],
   }
 
   # not using stdlib.concat to avoid extra dependency
@@ -65,7 +65,7 @@ define wget::fetch (
       default  => "password=${password}",
     }
 
-    file { "/tmp/wgetrc-${name}":
+    file { "${destination}.wgetrc":
       owner   => 'root',
       mode    => '0600',
       content => $wgetrc_content,
