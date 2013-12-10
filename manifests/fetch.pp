@@ -66,7 +66,7 @@ define wget::fetch (
     }
 
     file { "${destination}.wgetrc":
-      owner   => 'root',
+      owner   => $execuser,
       mode    => '0600',
       content => $wgetrc_content,
       before  => Exec["wget-${name}"],
