@@ -85,7 +85,7 @@ define wget::fetch (
     timeout     => $timeout,
     unless      => $unless_test,
     environment => $environment,
-    user        => $execuser,
+    user        => $cache_dir ? { undef => $execuser, default => undef },
     path        => '/usr/bin:/usr/sbin:/bin:/usr/local/bin:/opt/local/bin',
     require     => Class['wget'],
   }
