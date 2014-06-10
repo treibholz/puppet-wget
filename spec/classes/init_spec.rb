@@ -20,4 +20,13 @@ describe 'wget' do
 
     it { should_not contain_package('wget') }
   end
+
+  context 'running on FreeBSD', :compile do
+    let(:facts) { {
+      :operatingsystem => 'FreeBSD',
+      :kernel => 'FreeBSD'
+    } }
+
+    it { should contain_package('ftp/wget') }
+  end
 end
