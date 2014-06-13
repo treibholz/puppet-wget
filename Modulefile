@@ -1,5 +1,5 @@
 name    'maestrodev-wget'
-version '1.4.3'
+version '1.4.4'
 source 'http://github.com/maestrodev/puppet-wget.git'
 author 'maestrodev'
 license 'Apache License, Version 2.0'
