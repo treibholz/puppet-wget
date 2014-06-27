@@ -1,3 +1,7 @@
+[![Build Status](https://maestro.maestrodev.com/api/v1/projects/27/compositions/106/badge/icon)](https://maestro.maestrodev.com/projects/27/compositions/106)
+
+
+
 A Puppet module to download files with wget, supporting authentication.
 
 # Example
