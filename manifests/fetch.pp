@@ -12,9 +12,11 @@ define wget::fetch (
   $verbose            = false,
   $redownload         = false,
   $nocheckcertificate = false,
+  $no_cookies         = false,
   $execuser           = undef,
   $user               = undef,
   $password           = undef,
+  $headers            = undef,
   $cache_dir          = undef,
   $cache_file         = undef,
 ) {
@@ -35,7 +37,7 @@ define wget::fetch (
   }
 
   # not using stdlib.concat to avoid extra dependency
-  $environment = split(inline_template("<%= (@http_proxy_env+@https_proxy_env+@password_env).join(',') %>"),',')
+  $environment = split(inline_template('<%= (@http_proxy_env+@https_proxy_env+@password_env).join(\',\') %>'),',')
 
   $verbose_option = $verbose ? {
     true  => '--verbose',
@@ -50,6 +52,11 @@ define wget::fetch (
   $nocheckcert_option = $nocheckcertificate ? {
     true  => ' --no-check-certificate',
     false => ''
+  }
+
+  $no_cookies_option = $no_cookies ? {
+    true  => ' --no-cookies',
+    false => '',
   }
 
   $user_option = $user ? {
@@ -80,8 +87,18 @@ define wget::fetch (
     default => " -N -P '${cache_dir}'",
   }
 
+  # again, not using stdlib.concat, concatanate array of headers into a single string
+  if $headers != undef {
+    $headers_all = inline_template('<% @headers.each do | header | -%> --header=<%= header -%><% end -%>')
+  }
+
+  $header_option = $headers ? {
+    undef   => '',
+    default => $headers_all,
+  }
+
   exec { "wget-${name}":
-    command     => "wget ${verbose_option}${nocheckcert_option}${user_option}${output_option} '${source}'",
+    command     => "wget ${verbose_option}${nocheckcert_option}${no_cookies_option}${header_option}${user_option}${output_option} '${source}'",
     timeout     => $timeout,
     unless      => $unless_test,
     environment => $environment,
@@ -92,7 +109,7 @@ define wget::fetch (
 
   if $cache_dir != undef {
     $cache = $cache_file ? {
-      undef   => inline_template("<%= require 'uri'; File.basename(URI::parse(@source).path) %>"),
+      undef   => inline_template('<%= require \'uri\'; File.basename(URI::parse(@source).path) %>'),
       default => $cache_file,
     }
     file { $destination:
