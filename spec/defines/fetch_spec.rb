@@ -114,7 +114,7 @@ describe 'wget::fetch' do
     })}
 
     it { should contain_exec('wget-test').with({
-      'command' => "wget --no-verbose --header=header1 --header=header2 --output-document='#{destination}' 'http://localhost/source'",
+      'command' => "wget --no-verbose --header \"header1\" --header \"header2\" --output-document='#{destination}' 'http://localhost/source'",
       'environment' => []
     }) }
   end
