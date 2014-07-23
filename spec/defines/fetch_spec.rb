@@ -108,4 +108,26 @@ describe 'wget::fetch' do
     }) }
   end
 
+  context "with multiple headers", :compile do
+    let(:params) { super().merge({
+      :headers => ['header1', 'header2'],
+    })}
+
+    it { should contain_exec('wget-test').with({
+      'command' => "wget --no-verbose --header \"header1\" --header \"header2\" --output-document='#{destination}' 'http://localhost/source'",
+      'environment' => []
+    }) }
+  end
+
+  context "with no-cookies", :compile do
+    let(:params) { super().merge({
+      :no_cookies => true,
+    })}
+
+    it { should contain_exec('wget-test').with({
+      'command' => "wget --no-verbose --no-cookies --output-document='#{destination}' 'http://localhost/source'",
+      'environment' => []
+    }) }
+  end
+
 end
