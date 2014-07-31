@@ -97,7 +97,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  puppet (>= 2.7.17)
+  puppet (>= 3.4.0)
   puppet-blacksmith (>= 1.0.5)
   puppet-lint (>= 0.1.12)
   puppetlabs_spec_helper
