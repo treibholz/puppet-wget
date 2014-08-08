@@ -44,9 +44,10 @@ define wget::fetch (
     false => '--no-verbose'
   }
 
-  $unless_test = $redownload ? {
-    true  => 'test',
-    false => "test -s ${destination}"
+  if $redownload == true or $cache_dir != undef  {
+    $unless_test = 'test'
+  } else {
+    $unless_test = "test -s ${destination}"
   }
 
   $nocheckcert_option = $nocheckcertificate ? {
