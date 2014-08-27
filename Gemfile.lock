@@ -42,7 +42,7 @@ GEM
       nokogiri
       puppet (>= 2.7.16)
       rest-client
-    puppet-lint (0.3.2)
+    puppet-lint (1.0.1)
     puppetlabs_spec_helper (0.4.1)
       mocha (>= 0.10.5)
       rake

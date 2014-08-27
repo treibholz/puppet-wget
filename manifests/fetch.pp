@@ -104,12 +104,17 @@ define wget::fetch (
     default => inline_template(' <%= @flags.join(" ") %>')
   }
 
+  $exec_user = $cache_dir ? {
+    undef   => $execuser,
+    default => undef,
+  }
+
   exec { "wget-${name}":
     command     => "wget ${verbose_option}${nocheckcert_option}${no_cookies_option}${header_option}${user_option}${output_option}${flags_joined} '${source}'",
     timeout     => $timeout,
     unless      => $unless_test,
     environment => $environment,
-    user        => $cache_dir ? { undef => $execuser, default => undef },
+    user        => $exec_user,
     path        => '/usr/bin:/usr/sbin:/bin:/usr/local/bin:/opt/local/bin',
     require     => Class['wget'],
   }

@@ -8,7 +8,9 @@ CLOBBER.include('.tmp', '.librarian')
 require 'puppetlabs_spec_helper/rake_tasks'
 require 'puppet_blacksmith/rake_tasks'
 require 'rspec-system/rake_task'
+require 'puppet-lint/tasks/puppet-lint'
+PuppetLint.configuration.send("disable_80chars")
 
 task :spec_system => :clean
 
-task :default => [:clean, :spec]
+task :default => [:clean, :lint, :spec]
