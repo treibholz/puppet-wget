@@ -79,6 +79,15 @@
         "6.1",
         "7.1"
       ]
+    },
+    {
+      "operatingsystem": "Darwin",
+      "operatingsystemmajrelease": [
+        "10",
+        "11",
+        "12",
+        "13"
+      ]
     }
   ],
   "requirements": [
