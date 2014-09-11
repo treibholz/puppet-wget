@@ -101,7 +101,7 @@
     }
   ],
   "name": "maestrodev-wget",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "source": "https://github.com/maestrodev/puppet-wget.git",
   "author": "maestrodev",
   "license": "Apache 2.0",
