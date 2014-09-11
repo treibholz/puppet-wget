@@ -8,6 +8,6 @@ group :rake do
   gem 'puppet-lint',  '>=1.0.0', :require => false
   gem 'puppetlabs_spec_helper', :require => false
   gem 'puppet-blacksmith', '>=1.0.5', :require => false
-  gem 'rspec-system-puppet', :require => false
-  gem 'rspec-system-serverspec', :require => false
+  gem 'beaker', '>=1.17.0', :require => false
+  gem 'beaker-rspec', '>=2.1.0', :require => false
 end

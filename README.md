@@ -65,13 +65,23 @@ this case you must inform the correct filename in the cache like this:
     }
 ```
 
-# Testing
+# Building
 
-`rake` will run the rspec-puppet specs
+Testing is done with rspec, [Beaker-rspec](https://github.com/puppetlabs/beaker-rspec), [Beaker](https://github.com/puppetlabs/beaker))
 
-`rake spec:system` will run the rspec-system specs with vagrant
+To test and build the module
 
-`RS_DESTROY=no rake spec:system` to avoid destroying the vm after running the tests
+    bundle install
+    # run specs
+    rake
+
+    # run Beaker system tests with vagrant vms
+    rake beaker
+    # to use other vm from the list spec/acceptance/nodesets and not destroy the vm after the tests
+    BEAKER_destroy=no BEAKER_set=centos-65-x64-docker bundle exec rake beaker
+
+    # Release the Puppet module to the Forge, doing a clean, build, tag, push, bump_commit and git push
+    rake module:release
 
 # License
 
