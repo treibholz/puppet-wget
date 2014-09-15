@@ -12,7 +12,7 @@ RSpec.configure do |c|
     # work around https://tickets.puppetlabs.com/browse/PUP-1547
     # ensure that there's at least one provider available by emulating that any command exists
     require 'puppet/confine/exists'
-    Puppet::Confine::Exists.any_instance.stubs(:which => '')
+    # Puppet::Confine::Exists.any_instance.stubs(:which => '')
     # avoid "Only root can execute commands as other users"
     Puppet.features.stubs(:root? => true)
 
