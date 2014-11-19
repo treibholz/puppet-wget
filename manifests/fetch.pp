@@ -46,7 +46,7 @@ define wget::fetch (
   }
 
   if $redownload == true or $cache_dir != undef  {
-    $unless_test = 'test'
+    $unless_test = undef
   } else {
     $unless_test = "test -s ${destination}"
   }
