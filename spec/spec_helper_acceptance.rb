@@ -2,6 +2,21 @@ require 'puppet'
 require 'beaker-rspec/spec_helper'
 require 'beaker-rspec/helpers/serverspec'
 
+# overriding puppet installation for the RedHat family distros due to
+# puppet breakage >= 3.5
+def install_puppet(host)
+  host['platform'] =~ /(fedora|el)-(\d+)/
+  if host['platform'] =~ /(fedora|el)-(\d+)/
+    safeversion = '3.4.2'
+    platform = $1
+    relver = $2
+    on host, "rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-#{platform}-#{relver}.noarch.rpm"
+    on host, "yum install -y puppet-#{safeversion}"
+  else
+    super()
+  end
+end
+
 RSpec.configure do |c|
 
   # Project root
@@ -21,13 +36,14 @@ RSpec.configure do |c|
           if host.is_pe?
             install_pe
           else
-            install_puppet
+            install_puppet(host)
           end
         end
       end
 
       # Install module and dependencies
-      puppet_module_install(:source => proj_root, :module_name => 'wget')
+      puppet_module_install(:source => proj_root, :module_name => File.basename(proj_root).gsub(/^puppet-/,''))
+
     end
   end
 
