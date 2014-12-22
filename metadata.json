@@ -1,4 +1,25 @@
 {
+  "name": "maestrodev-wget",
+  "version": "1.5.7",
+  "source": "https://github.com/maestrodev/puppet-wget.git",
+  "author": "maestrodev",
+  "license": "Apache-2.0",
+  "summary": "Download files with wget",
+  "description": "A module for wget that allows downloading of files, supporting authentication",
+  "project_page": "https://github.com/maestrodev/puppet-wget",
+  "dependencies": [
+
+  ],
+  "requirements": [
+    {
+      "name": "pe",
+      "version_requirement": ">=3.2.0"
+    },
+    {
+      "name": "puppet",
+      "version_requirement": ">=2.7.17"
+    }
+  ],
   "operatingsystem_support": [
     {
       "operatingsystem": "RedHat",
@@ -93,26 +114,5 @@
         "13"
       ]
     }
-  ],
-  "requirements": [
-    {
-      "name": "pe",
-      "version_requirement": ">=3.2.0"
-    },
-    {
-      "name": "puppet",
-      "version_requirement": ">=2.7.17"
-    }
-  ],
-  "name": "maestrodev-wget",
-  "version": "1.5.7",
-  "source": "https://github.com/maestrodev/puppet-wget.git",
-  "author": "maestrodev",
-  "license": "Apache 2.0",
-  "summary": "Download files with wget",
-  "description": "A module for wget that allows downloading of files, supporting authentication",
-  "project_page": "https://github.com/maestrodev/puppet-wget",
-  "dependencies": [
-
   ]
 }
