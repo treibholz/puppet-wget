@@ -1,8 +1,8 @@
 ################################################################################
 # Definition: wget::fetch
 #
-# This class will download files from the internet.  You may define a web proxy
-# using $http_proxy if necessary.
+# This defined type will download files from the internet.  You may define a
+# web proxy using $http_proxy if necessary.
 #
 ################################################################################
 define wget::fetch (
