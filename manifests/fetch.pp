@@ -116,7 +116,7 @@ define wget::fetch (
     unless      => $unless_test,
     environment => $environment,
     user        => $exec_user,
-    path        => '/usr/bin:/usr/sbin:/bin:/usr/local/bin:/opt/local/bin',
+    path        => '/usr/bin:/usr/sbin:/bin:/usr/local/bin:/opt/local/bin:/usr/sfw/bin',
     require     => Class['wget'],
   }
 
