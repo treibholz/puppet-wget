@@ -91,7 +91,7 @@ describe 'wget' do
 
     it "should fail" do
       shell("cat << EOF | su - vagrant -c 'puppet apply --verbose --detailed-exitcodes --modulepath=/etc/puppet/modules'\n#{manifest}", :acceptable_exit_codes => [6]) do |r|
-        expect(r.stdout).to match(%r{Wget::Fetch\[download RFC 2606\].*returns: md5sum: WARNING: 1 computed checksum did NOT match})
+        expect(r.stdout).to match(%r{Wget::Fetch\[download RFC 2606\].*returns: md5sum: WARNING: 1 .*computed checksum did NOT match})
         expect(r.stdout).to match(%r{Wget::Fetch\[download RFC 2606\].*returns: /tmp/rfc-2606-failed.txt: FAILED})
       end
       shell('test ! -e /tmp/rfc-2606-failed')
