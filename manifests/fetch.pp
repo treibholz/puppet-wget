@@ -85,10 +85,11 @@ define wget::fetch (
     }
 
     file { "${destination}.wgetrc":
-      owner   => $execuser,
-      mode    => '0600',
-      content => $wgetrc_content,
-      before  => Exec["wget-${name}"],
+      owner    => $execuser,
+      mode     => '0600',
+      content  => $wgetrc_content,
+      before   => Exec["wget-${name}"],
+      schedule => $schedule,
     }
   }
 
@@ -135,6 +136,7 @@ define wget::fetch (
     user        => $exec_user,
     path        => '/usr/bin:/usr/sbin:/bin:/usr/local/bin:/opt/local/bin:/usr/sfw/bin',
     require     => Class['wget'],
+    schedule    => $schedule,
   }
 
   if $cache_dir != undef {
@@ -143,23 +145,25 @@ define wget::fetch (
       default => $cache_file,
     }
     file { $destination:
-      ensure  => file,
-      source  => "${cache_dir}/${cache}",
-      owner   => $execuser,
-      mode    => $mode,
-      require => Exec["wget-${name}"],
-      backup  => $backup,
+      ensure   => file,
+      source   => "${cache_dir}/${cache}",
+      owner    => $execuser,
+      mode     => $mode,
+      require  => Exec["wget-${name}"],
+      backup   => $backup,
+      schedule => $schedule,
     }
   }
 
   # remove destination if source_hash is invalid
   if $source_hash != undef {
     exec { "wget-source_hash-check-${name}":
-      command => "test ! -e '${destination}' || rm ${destination}",
-      path    => '/usr/bin:/usr/sbin:/bin:/usr/local/bin:/opt/local/bin',
+      command  => "test ! -e '${destination}' || rm ${destination}",
+      path     => '/usr/bin:/usr/sbin:/bin:/usr/local/bin:/opt/local/bin',
       # only remove destination if md5sum does not match $source_hash
-      unless  => "echo '${source_hash}  ${destination}' | md5sum -c --quiet",
-      notify  => Exec["wget-${name}"],
+      unless   => "echo '${source_hash}  ${destination}' | md5sum -c --quiet",
+      notify   => Exec["wget-${name}"],
+      schedule => $schedule,
     }
   }
 }
