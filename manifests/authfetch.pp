@@ -30,6 +30,7 @@ define wget::authfetch (
     execuser           => $execuser,
     user               => $user,
     password           => $password,
+    schedule           => $schedule,
   }
 
 }
