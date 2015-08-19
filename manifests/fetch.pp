@@ -56,7 +56,7 @@ define wget::fetch (
   # Windows exec unless testing requires different syntax
   if ($::operatingsystem == 'windows') {
     $exec_path = $::path
-    $unless_test = "cmd.exe /c \"dir ${destination}\""    
+    $unless_test = "cmd.exe /c \"dir ${destination}\""
   } else {
     $exec_path = '/usr/bin:/usr/sbin:/bin:/usr/local/bin:/opt/local/bin:/usr/sfw/bin'
     if $redownload == true or $cache_dir != undef  {
