@@ -53,10 +53,17 @@ define wget::fetch (
     false => '--no-verbose'
   }
 
-  if $redownload == true or $cache_dir != undef  {
-    $unless_test = 'test'
+  # Windows exec unless testing requires different syntax
+  if ($::operatingsystem == 'windows') {
+    $exec_path = $::path
+    $unless_test = "cmd.exe /c \"dir ${destination}\""    
   } else {
-    $unless_test = "test -s '${destination}'"
+    $exec_path = '/usr/bin:/usr/sbin:/bin:/usr/local/bin:/opt/local/bin:/usr/sfw/bin'
+    if $redownload == true or $cache_dir != undef  {
+      $unless_test = 'test'
+    } else {
+      $unless_test = "test -s '${destination}'"
+    }
   }
 
   $nocheckcert_option = $nocheckcertificate ? {
@@ -94,8 +101,8 @@ define wget::fetch (
   }
 
   $output_option = $cache_dir ? {
-    undef   => " --output-document='${destination}'",
-    default => " -N -P '${cache_dir}'",
+    undef   => " --output-document=\"${destination}\"",
+    default => " -N -P \"${cache_dir}\"",
   }
 
   # again, not using stdlib.concat, concatanate array of headers into a single string
@@ -120,10 +127,10 @@ define wget::fetch (
 
   case $source_hash{
     '', undef: {
-      $command = "wget ${verbose_option}${nocheckcert_option}${no_cookies_option}${header_option}${user_option}${output_option}${flags_joined} '${source}'"
+      $command = "wget ${verbose_option}${nocheckcert_option}${no_cookies_option}${header_option}${user_option}${output_option}${flags_joined} \"${source}\""
     }
     default: {
-      $command = "wget ${verbose_option}${nocheckcert_option}${no_cookies_option}${header_option}${user_option}${output_option}${flags_joined} '${source}' && echo '${source_hash}  ${destination}' | md5sum -c --quiet"
+      $command = "wget ${verbose_option}${nocheckcert_option}${no_cookies_option}${header_option}${user_option}${output_option}${flags_joined} \"${source}\" && echo '${source_hash}  ${destination}' | md5sum -c --quiet"
     }
   }
 
@@ -134,7 +141,7 @@ define wget::fetch (
     unless      => $unless_test,
     environment => $environment,
     user        => $exec_user,
-    path        => '/usr/bin:/usr/sbin:/bin:/usr/local/bin:/opt/local/bin:/usr/sfw/bin',
+    path        => $exec_path,
     require     => Class['wget'],
     schedule    => $schedule,
   }
