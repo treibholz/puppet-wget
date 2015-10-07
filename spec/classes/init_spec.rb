@@ -11,6 +11,11 @@ describe 'wget' do
     it { should contain_package('wget').with_ensure('present') }
   end
 
+  context 'manage_package => false', :compile do
+    let(:params) { {:manage_package => false } }
+    it { should_not contain_package('wget').with_ensure('present') }
+  end
+
   context 'version is 1.2.3', :compile do
     let(:params) { {:version => '1.2.3'} }
 
