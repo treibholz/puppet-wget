@@ -32,6 +32,20 @@ define wget::fetch (
 
   include wget
 
+  # Does $destination end in a slash? If so, treat as a directory
+  case $destination   {
+    # This is a nasty looking regex but it's simply checking to see if the $destination
+    # ends in either forward slash "\" (Linux) or backwards slash "/" (Windows)
+    /^.*\/$/, /^.*\$/:  {
+      $source_split    = split($source, '/')  # split the URL into arrays, using "/" as a delimiter
+      $source_filename = $source_split[-1]    # take the very last value in the array. this is the filename
+      $_destination    = "${destination}/${source_filename}"
+    }
+    default: {
+      $_destination = $destination
+    }
+  }
+
   $http_proxy_env = $::http_proxy ? {
     undef   => [],
     default => [ "HTTP_PROXY=${::http_proxy}", "http_proxy=${::http_proxy}" ],
@@ -42,7 +56,7 @@ define wget::fetch (
   }
   $password_env = $user ? {
     undef   => [],
-    default => [ "WGETRC=${destination}.wgetrc" ],
+    default => [ "WGETRC=${_destination}.wgetrc" ],
   }
 
   # not using stdlib.concat to avoid extra dependency
@@ -56,13 +70,13 @@ define wget::fetch (
   # Windows exec unless testing requires different syntax
   if ($::operatingsystem == 'windows') {
     $exec_path = $::path
-    $unless_test = "cmd.exe /c \"dir ${destination}\""
+    $unless_test = "cmd.exe /c \"dir ${_destination}\""
   } else {
     $exec_path = '/usr/bin:/usr/sbin:/bin:/usr/local/bin:/opt/local/bin:/usr/sfw/bin'
     if $redownload == true or $cache_dir != undef  {
       $unless_test = 'test'
     } else {
-      $unless_test = "test -s '${destination}'"
+      $unless_test = "test -s '${_destination}'"
     }
   }
 
@@ -91,7 +105,7 @@ define wget::fetch (
       default  => "password=${password}",
     }
 
-    file { "${destination}.wgetrc":
+    file { "${_destination}.wgetrc":
       owner    => $execuser,
       mode     => '0600',
       content  => $wgetrc_content,
@@ -101,7 +115,7 @@ define wget::fetch (
   }
 
   $output_option = $cache_dir ? {
-    undef   => " --output-document=\"${destination}\"",
+    undef   => " --output-document=\"${_destination}\"",
     default => " -N -P \"${cache_dir}\"",
   }
 
@@ -130,9 +144,11 @@ define wget::fetch (
       $command = "wget ${verbose_option}${nocheckcert_option}${no_cookies_option}${header_option}${user_option}${output_option}${flags_joined} \"${source}\""
     }
     default: {
-      $command = "wget ${verbose_option}${nocheckcert_option}${no_cookies_option}${header_option}${user_option}${output_option}${flags_joined} \"${source}\" && echo '${source_hash}  ${destination}' | md5sum -c --quiet"
+      $command = "wget ${verbose_option}${nocheckcert_option}${no_cookies_option}${header_option}${user_option}${output_option}${flags_joined} \"${source}\" && echo '${source_hash}  ${_destination}' | md5sum -c --quiet"
     }
   }
+
+
 
 
   exec { "wget-${name}":
@@ -151,7 +167,7 @@ define wget::fetch (
       undef   => inline_template('<%= require \'uri\'; File.basename(URI::parse(@source).path) %>'),
       default => $cache_file,
     }
-    file { $destination:
+    file { $_destination:
       ensure   => file,
       source   => "${cache_dir}/${cache}",
       owner    => $execuser,
@@ -165,10 +181,10 @@ define wget::fetch (
   # remove destination if source_hash is invalid
   if $source_hash != undef {
     exec { "wget-source_hash-check-${name}":
-      command  => "test ! -e '${destination}' || rm ${destination}",
+      command  => "test ! -e '${_destination}' || rm ${_destination}",
       path     => '/usr/bin:/usr/sbin:/bin:/usr/local/bin:/opt/local/bin',
       # only remove destination if md5sum does not match $source_hash
-      unless   => "echo '${source_hash}  ${destination}' | md5sum -c --quiet",
+      unless   => "echo '${source_hash}  ${_destination}' | md5sum -c --quiet",
       notify   => Exec["wget-${name}"],
       schedule => $schedule,
     }
