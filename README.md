@@ -18,7 +18,7 @@ install wget:
 ```puppet
     wget::fetch { "download Google's index":
       source      => 'http://www.google.com/index.html',
-      destination => '/tmp/index.html',
+      destination => '/tmp/',
       timeout     => 0,
       verbose     => false,
     }
@@ -27,17 +27,38 @@ or alternatively:
 
 ```puppet
     wget::fetch { 'http://www.google.com/index.html':
-      destination => '/tmp/index.html',
+      destination => '/tmp/',
       timeout     => 0,
       verbose     => false,
     }
 ```
+
+If `$destination` ends in either a forward or backward slash, it will treat the destination as a directory and name the file with the basename of the `$source`.
+```puppet
+  wget::fetch { 'http://mywebsite.com/apples':
+    destination => '/downloads/',
+  }
+```
+
+Download from an array of URLs into one directory
+```puppet
+  $manyfiles = [
+    'http://mywebsite.com/apples',
+    'http://mywebsite.com/oranges',
+    'http://mywebsite.com/bananas',
+  ]
+
+  wget::fetch { $manyfiles:
+    destination => '/downloads/',
+  }
+```
+
 This fetches a document which requires authentication:
 
 ```puppet
     wget::fetch { 'Fetch secret PDF':
       source      => 'https://confidential.example.com/secret.pdf',
-      destination => '/tmp/secret.pdf',
+      destination => '/tmp/',
       user        => 'user',
       password    => 'p$ssw0rd',
       timeout     => 0,
@@ -51,7 +72,7 @@ wget options to only re-download if the source file has been updated.
 
 ```puppet
     wget::fetch { 'https://tool.com/downloads/tool-1.0.tgz':
-      destination => '/tmp/tool-1.0.tgz',
+      destination => '/tmp/',
       cache_dir   => '/var/cache/wget',
     }
 ```
