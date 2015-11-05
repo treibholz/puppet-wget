@@ -156,4 +156,15 @@ describe 'wget::fetch' do
       'unless'  => "echo 'd41d8cd98f00b204e9800998ecf8427e  #{destination}' | md5sum -c --quiet",
     })}
   end
+
+  context "download to dir", :compile do
+    let(:params) { super().merge({
+      :destination => '/tmp/dest/',
+    })}
+  
+    it { should contain_exec('wget-test').with({
+      'command' => "wget --no-verbose --output-document=\"#{destination}//source\" \"http://localhost/source\"",
+      'environment' => []
+    }) }
+  end
 end
