@@ -167,4 +167,16 @@ describe 'wget::fetch' do
       'environment' => []
     }) }
   end
+
+  context "with unless", :compile do
+    let(:params) { super().merge({
+      :unless => "test $(ls -A #{destination} | head -1 2>/dev/null)",
+    })}
+
+    it { should contain_exec('wget-test').with({
+      'command' => "wget --no-verbose --output-document=\"#{destination}\" \"http://localhost/source\"",
+      'unless'  => "test $(ls -A #{destination} | head -1 2>/dev/null)",
+    })}
+  end
+
 end
