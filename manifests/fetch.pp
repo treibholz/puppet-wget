@@ -53,7 +53,7 @@ define wget::fetch (
     undef   => [],
     default => [ "HTTP_PROXY=${http_proxy}", "http_proxy=${http_proxy}" ],
   }
-  $https_proxy_env = $::https_proxy ? {
+  $https_proxy_env = $https_proxy ? {
     undef   => [],
     default => [ "HTTPS_PROXY=${https_proxy}", "https_proxy=${https_proxy}" ],
   }
