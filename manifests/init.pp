@@ -5,8 +5,10 @@
 #
 ################################################################################
 class wget (
-  $version = present,
+  $version        = present,
   $manage_package = true,
+  $http_proxy     = $::http_proxy,
+  $https_proxy    = $::https_proxy,
 ) {
 
   if $manage_package {
