@@ -29,8 +29,8 @@ define wget::fetch (
   $backup             = true,
   $mode               = undef,
   $unless             = undef,
-  $http_proxy         = $::http_proxy,
-  $https_proxy        = $::https_proxy,
+  $http_proxy         = $wget::http_proxy,
+  $https_proxy        = $wget::https_proxy,
 ) {
 
   include wget
