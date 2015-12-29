@@ -10,6 +10,8 @@ class wget (
   $http_proxy     = $::http_proxy,
   $https_proxy    = $::https_proxy,
 ) {
+  $wget::http_proxy = $http_proxy
+  $wget::https_proxy = $https_proxy
 
   if $manage_package {
     if $::kernel == 'Linux' {
